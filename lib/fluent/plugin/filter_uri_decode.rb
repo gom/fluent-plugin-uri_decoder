@@ -1,5 +1,5 @@
 require "fluent/plugin/filter"
-require "uri"
+require "cgi"
 
 module Fluent::Plugin
   class URIDecoderFilter < Fluent::Plugin::Filter
@@ -17,7 +17,7 @@ module Fluent::Plugin
     def filter(tag, time, record)
       @key_names.each do |key_name|
         next unless record.key?(key_name)
-        record[key_name] = URI.decode_www_form_component(record[key_name])
+        record[key_name] = CGI.unescape(record[key_name])
       end
       record
     end

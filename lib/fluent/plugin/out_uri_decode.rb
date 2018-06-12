@@ -1,5 +1,5 @@
 require 'fluent/plugin/output'
-require 'uri'
+require 'cgi'
 
 class Fluent::Plugin::URIDecoderOutput < Fluent::Plugin::Output
   Fluent::Plugin.register_output('uri_decode', self)
@@ -57,7 +57,7 @@ class Fluent::Plugin::URIDecoderOutput < Fluent::Plugin::Output
 
     es.each do |time, record|
       @key_names.each do |key_name|
-        record[key_name] = URI.decode_www_form_component(record[key_name] || '')
+        record[key_name] = CGI.unescape(record[key_name] || '')
       end
 
       router.emit(tag, time, record)
